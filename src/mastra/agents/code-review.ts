@@ -24,6 +24,6 @@ export const codeReviewAgent = new Agent({
       Use the CodeReviewTool to analyze and review code snippets.
       Use the MemoryLeakAnalyzerTool specifically for JavaScript/TypeScript code to detect memory leaks.
   `,
-    model: openai('gpt-4o'),
+    model: openai('GPT-4o mini'),
     tools: { CodeReviewTool, MemoryLeakAnalyzerTool } as any,
 });

@@ -37,7 +37,7 @@ export class CodeReviewTool {
                 // Generic code review for other languages
                 return genericCodeReview(code, level);
             }
-        } catch (error) {
+        } catch (error: any) {
             return {
                 issues: [{
                     severity: 'error',
@@ -142,7 +142,7 @@ function reviewJavaScript(code, level) {
         }
 
         return result;
-    } catch (error) {
+    } catch (error: any) {
         return {
             issues: [{
                 severity: 'error',
