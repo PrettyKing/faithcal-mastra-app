@@ -6,6 +6,18 @@ import { CloudflareDeployer } from '@mastra/deployer-cloudflare';
 import { weatherAgent } from './agents/weather';
 import { codeReviewAgent } from './agents/code-review';
 
+
+interface Env {
+  [key: string]: any;
+}
+
+const ENVIRONMENT_VARIABLES = {}
+
+addEventListener('fetch', (event) => {
+  console.log('Event listener triggered:=>', event);
+})
+
+
 export const mastra = new Mastra({
   agents: { weatherAgent, codeReviewAgent },
   logger: createLogger({
