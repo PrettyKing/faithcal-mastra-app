@@ -1,7 +1,0 @@
-name = "faithcal-mastra-app"
-main = ".mastra/output/index.js"
-
-compatibility_date = "2025-05-11"
-
-[site]
-bucket = ".mastra/output"
