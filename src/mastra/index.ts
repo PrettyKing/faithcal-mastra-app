@@ -1,7 +1,6 @@
 
 import { Mastra } from '@mastra/core/mastra';
 import { createLogger } from '@mastra/core/logger';
-// import { LibSQLStore } from '@mastra/libsql';
 import { CloudflareDeployer } from '@mastra/deployer-cloudflare';
 
 import { weatherAgent } from './agents/weather';
