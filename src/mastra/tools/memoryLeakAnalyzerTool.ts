@@ -7,7 +7,7 @@ import * as escope from 'escope';
  */
 export class MemoryLeakAnalyzerTool {
   static description = 'Analyzes JavaScript/TypeScript code for potential memory leaks';
-  
+
   /**
    * Executes memory leak analysis
    * @param {Object} params - Parameters for memory leak analysis
@@ -15,9 +15,9 @@ export class MemoryLeakAnalyzerTool {
    * @param {Object} params.options - Additional options for memory leak analysis
    * @returns {Object} - Analysis results
    */
-  async execute({ code, options = { 
-    checkClosures: true, 
-    checkEventListeners: true, 
+  async execute({ code, options = {
+    checkClosures: true,
+    checkEventListeners: true,
     checkCircularReferences: true,
     checkLargeArrays: true
   } }) {
@@ -65,7 +65,7 @@ export class MemoryLeakAnalyzerTool {
       });
 
       return result;
-    } catch (error) {
+    } catch (error: any) {
       return {
         leaks: [],
         warnings: [{
@@ -86,7 +86,7 @@ export class MemoryLeakAnalyzerTool {
  */
 function analyzeForLargeArrays(ast, result) {
   estraverse.traverse(ast, {
-    enter: function(node) {
+    enter: function (node) {
       // Check for large array literals
       if (node.type === 'ArrayExpression' && node.elements.length > 1000) {
         result.warnings.push({
@@ -97,12 +97,12 @@ function analyzeForLargeArrays(ast, result) {
       }
 
       // Check for Array creation with large size
-      if (node.type === 'NewExpression' && 
-          node.callee.name === 'Array' && 
-          node.arguments.length > 0 && 
-          node.arguments[0].type === 'Literal' && 
-          typeof node.arguments[0].value === 'number' && 
-          node.arguments[0].value > 10000) {
+      if (node.type === 'NewExpression' &&
+        node.callee.name === 'Array' &&
+        node.arguments.length > 0 &&
+        node.arguments[0].type === 'Literal' &&
+        typeof node.arguments[0].value === 'number' &&
+        node.arguments[0].value > 10000) {
         result.leaks.push({
           severity: 'high',
           message: `Creating a very large Array with ${node.arguments[0].value} elements. This could lead to excessive memory usage.`,
@@ -111,10 +111,10 @@ function analyzeForLargeArrays(ast, result) {
       }
 
       // Check for fill or similar methods with large data
-      if (node.type === 'CallExpression' && 
-          node.callee.type === 'MemberExpression' &&
-          (node.callee.property.name === 'fill' || 
-           node.callee.property.name === 'f1ll')) { // Catching typo 'f1ll' as in the example
+      if (node.type === 'CallExpression' &&
+        node.callee.type === 'MemberExpression' &&
+        (node.callee.property.name === 'fill' ||
+          node.callee.property.name === 'f1ll')) { // Catching typo 'f1ll' as in the example
         result.leaks.push({
           severity: 'high',
           message: 'Array.fill method used to populate a potentially large array. Check if this could lead to memory issues.',
@@ -131,29 +131,29 @@ function analyzeForLargeArrays(ast, result) {
 function analyzeForClosureLeaks(ast, scopeManager, result) {
   // Find functions that create closures
   estraverse.traverse(ast, {
-    enter: function(node) {
+    enter: function (node) {
       if (node.type === 'FunctionDeclaration' || node.type === 'FunctionExpression' || node.type === 'ArrowFunctionExpression') {
         // Check if this function creates a closure that might leak
         const scope = scopeManager.acquire(node);
-        
+
         if (scope) {
           const references = scope.references;
           const variables = scope.variables;
-          
+
           // Check for variables defined outside but referenced inside
           for (const ref of references) {
             if (!ref.resolved) continue;
-            
+
             // If the variable is defined in an outer scope and is not a global
             if (ref.resolved.scope !== scope && ref.resolved.scope.type !== 'global') {
               // Check if the variable might be large
               const varName = ref.identifier.name;
-              
+
               // Look for references to large objects or arrays in the closure
-              if (varName.toLowerCase().includes('data') || 
-                  varName.toLowerCase().includes('array') || 
-                  varName.toLowerCase().includes('cache') || 
-                  varName.toLowerCase().includes('buffer')) {
+              if (varName.toLowerCase().includes('data') ||
+                varName.toLowerCase().includes('array') ||
+                varName.toLowerCase().includes('cache') ||
+                varName.toLowerCase().includes('buffer')) {
                 result.leaks.push({
                   severity: 'high',
                   message: `Potential memory leak: Closure references large outer variable '${varName}' which may prevent garbage collection.`,
@@ -164,26 +164,26 @@ function analyzeForClosureLeaks(ast, scopeManager, result) {
           }
         }
       }
-      
+
       // Check for loop patterns that create many closures
       if (node.type === 'ForStatement' || node.type === 'ForInStatement' || node.type === 'ForOfStatement') {
         const body = node.body.body || (node.body.type === 'BlockStatement' ? node.body.body : [node.body]);
-        
-        const pushesToArray = body.some(statement => 
-          statement.type === 'ExpressionStatement' && 
-          statement.expression.type === 'CallExpression' && 
-          statement.expression.callee.type === 'MemberExpression' && 
+
+        const pushesToArray = body.some(statement =>
+          statement.type === 'ExpressionStatement' &&
+          statement.expression.type === 'CallExpression' &&
+          statement.expression.callee.type === 'MemberExpression' &&
           statement.expression.callee.property.name === 'push'
         );
-        
-        const createsFunctions = body.some(statement => 
-          (statement.type === 'FunctionDeclaration') || 
-          (statement.type === 'VariableDeclaration' && 
-           statement.declarations.some(decl => 
-             decl.init && (decl.init.type === 'FunctionExpression' || decl.init.type === 'ArrowFunctionExpression')
-           ))
+
+        const createsFunctions = body.some(statement =>
+          (statement.type === 'FunctionDeclaration') ||
+          (statement.type === 'VariableDeclaration' &&
+            statement.declarations.some(decl =>
+              decl.init && (decl.init.type === 'FunctionExpression' || decl.init.type === 'ArrowFunctionExpression')
+            ))
         );
-        
+
         if (pushesToArray && createsFunctions) {
           result.leaks.push({
             severity: 'high',
@@ -201,16 +201,16 @@ function analyzeForClosureLeaks(ast, scopeManager, result) {
  */
 function analyzeForEventListenerLeaks(ast, result) {
   // Track addEventListener calls
-  const eventListeners:any = [];
-  
+  const eventListeners: any = [];
+
   estraverse.traverse(ast, {
-    enter: function(node) {
+    enter: function (node) {
       // Check for addEventListener calls
-      if (node.type === 'CallExpression' && 
-          node.callee.type === 'MemberExpression' && 
-          node.callee.property.name === 'addEventListener' && 
-          node.arguments.length >= 2) {
-        
+      if (node.type === 'CallExpression' &&
+        node.callee.type === 'MemberExpression' &&
+        node.callee.property.name === 'addEventListener' &&
+        node.arguments.length >= 2) {
+
         eventListeners.push({
           node: node,
           event: node.arguments[0].value || 'unknown',
@@ -219,17 +219,17 @@ function analyzeForEventListenerLeaks(ast, result) {
       }
     }
   });
-  
+
   // Track removeEventListener calls
-  const removeListeners:any = [];
-  
+  const removeListeners: any = [];
+
   estraverse.traverse(ast, {
-    enter: function(node) {
+    enter: function (node) {
       // Check for removeEventListener calls
-      if (node.type === 'CallExpression' && 
-          node.callee.type === 'MemberExpression' && 
-          node.callee.property.name === 'removeEventListener') {
-        
+      if (node.type === 'CallExpression' &&
+        node.callee.type === 'MemberExpression' &&
+        node.callee.property.name === 'removeEventListener') {
+
         removeListeners.push({
           event: node.arguments[0].value || 'unknown',
           line: node.loc.start.line
@@ -237,7 +237,7 @@ function analyzeForEventListenerLeaks(ast, result) {
       }
     }
   });
-  
+
   // Check for imbalance
   if (eventListeners.length > 0 && removeListeners.length < eventListeners.length) {
     result.warnings.push({
@@ -245,7 +245,7 @@ function analyzeForEventListenerLeaks(ast, result) {
       message: `Found ${eventListeners.length} event listeners but only ${removeListeners.length} removals. Ensure all event listeners are properly removed to prevent memory leaks.`,
       line: eventListeners[0].line
     });
-    
+
     result.recommendations.push({
       message: 'Always use removeEventListener to clean up event listeners when they are no longer needed, especially in components with dynamic lifecycles.'
     });
@@ -258,17 +258,17 @@ function analyzeForEventListenerLeaks(ast, result) {
 function analyzeForCircularReferences(ast, result) {
   // Check for patterns that commonly create circular references
   estraverse.traverse(ast, {
-    enter: function(node) {
+    enter: function (node) {
       // Check for object property assignments that might create circular references
-      if (node.type === 'AssignmentExpression' && 
-          node.left.type === 'MemberExpression' && 
-          node.right.type === 'Identifier') {
-        
+      if (node.type === 'AssignmentExpression' &&
+        node.left.type === 'MemberExpression' &&
+        node.right.type === 'Identifier') {
+
         // obj.parent = obj or similar patterns
         const objectName = node.left.object.name;
         const propertyName = node.left.property.name;
         const assignedValue = node.right.name;
-        
+
         if (objectName === assignedValue) {
           result.leaks.push({
             severity: 'medium',
@@ -277,13 +277,13 @@ function analyzeForCircularReferences(ast, result) {
           });
         }
       }
-      
+
       // Check for circular object literals
       if (node.type === 'ObjectExpression') {
         for (const prop of node.properties) {
           if (prop.value.type === 'Identifier') {
             const references = Array.isArray(prop.key) ? prop.key : [prop.key];
-            
+
             for (const ref of references) {
               if (ref.name === prop.value.name) {
                 result.warnings.push({
