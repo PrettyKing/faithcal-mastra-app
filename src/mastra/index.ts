@@ -18,11 +18,11 @@ export const mastra = new Mastra({
     level: 'info',
   }),
   deployer: new CloudflareDeployer({
-    scope: process.env.CLOUDFLARE_ACCOUNT_ID || '',
-    projectName: process.env.CLOUDFLARE_PROJECT_NAME,
+    scope: '3a7f6144f9dbd43a3d5d34b1b9c2c275',
+    projectName: 'faithcal-mastra-app',
     auth: {
-      apiToken: process.env.CLOUDFLARE_API_TOKEN || '',
-      apiEmail: process.env.CLOUDFLARE_EMAIL,
+      apiToken: 'U49CGJ6ZtH5-KuNtjN07zFOmqTdDxtiPoFqCm52o',
+      apiEmail: 'chaleeinhongkong@gamil.com',
     },
   }),
 });

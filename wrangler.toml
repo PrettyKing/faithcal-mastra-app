@@ -5,9 +5,3 @@ compatibility_date = "2025-05-11"
 
 [site]
 bucket = ".mastra/output"
-
-[vars]
-CLOUDFLARE_ACCOUNT_ID = "faithcal-mastra-app"
-CLOUDFLARE_PROJECT_NAME = "faithcal-mastra-app"
-CLOUDFLARE_API_TOKEN = "U49CGJ6ZtH5-KuNtjN07zFOmqTdDxtiPoFqCm52o"
-CLOUDFLARE_EMAIL = "chaleeinhongkong@gamil.com"
