@@ -1,9 +1,10 @@
 name = "faithcal-mastra-app"
-main = "src/index.js"
+main = ".mastra/output/index.js"
 
 compatibility_date = "2025-05-11"
- 
- compatibility_flags = ["nodejs_compat"]
+
+[site]
+bucket = "faithcal-mastra-app"
 
 [vars]
 OPENAI_API_KEY="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"
