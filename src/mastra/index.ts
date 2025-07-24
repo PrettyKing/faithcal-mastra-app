@@ -5,24 +5,19 @@ import { CloudflareDeployer } from '@mastra/deployer-cloudflare';
 
 import { weatherAgent } from './agents/weather';
 import { codeReviewAgent } from './agents/code-review';
+import { ragAgent } from './agents/ragAgent';
 
-
-interface Env {
-  [key: string]: any;
-}
-
-const ENVIRONMENT_VARIABLES = {}
-
-addEventListener('fetch', (event) => {
-  console.log('Event listener triggered:=>', event);
-})
+import { LibSQLStore } from '@mastra/libsql';
 
 
 export const mastra = new Mastra({
-  agents: { weatherAgent, codeReviewAgent },
+  agents: { weatherAgent, codeReviewAgent, ragAgent },
   logger: createLogger({
     name: 'Mastra',
     level: 'info',
+  }),
+  storage: new LibSQLStore({
+    url: 'file:../mastra.db',
   }),
   deployer: new CloudflareDeployer({
     scope: 'c501ded7917a10bae1f96f08a27c8af1',
