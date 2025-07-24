@@ -1,6 +1,11 @@
-// src/mastra/tools/knowledgeSearchTool.ts
+import dotenv from 'dotenv';
 import { Pinecone } from '@pinecone-database/pinecone';
 
+
+dotenv.config({
+    path: '../../.env',
+    debug: true,
+});
 /**
  * Tool for searching the knowledge base using semantic similarity
  */
@@ -12,6 +17,15 @@ export class KnowledgeSearchTool {
     });
 
     private static index = this.pinecone.index(process.env.PINECONE_INDEX_NAME || 'mastra-knowledge-base');
+
+    constructor() {
+        if (!process.env.PINECONE_API_KEY) {
+            throw new Error('Pinecone API key is not set in environment variables');
+        }
+        if (!process.env.PINECONE_INDEX_NAME) {
+            throw new Error('Pinecone index name is not set in environment variables');
+        }
+    }
 
     /**
      * Executes knowledge base search
@@ -89,9 +103,9 @@ export class KnowledgeSearchTool {
                 ];
             } else {
                 result.insights = {
-                    highRelevance: filteredResults.filter((r:any) => r.score >= 0.9).length,
-                    mediumRelevance: filteredResults.filter((r:any) => r.score >= 0.8 && r.score < 0.9).length,
-                    lowRelevance: filteredResults.filter((r:any) => r.score < 0.8).length,
+                    highRelevance: filteredResults.filter((r: any) => r.score >= 0.9).length,
+                    mediumRelevance: filteredResults.filter((r: any) => r.score >= 0.8 && r.score < 0.9).length,
+                    lowRelevance: filteredResults.filter((r: any) => r.score < 0.8).length,
                     categories: [...new Set(filteredResults.map(r => r.category))]
                 };
             }
@@ -239,7 +253,7 @@ export class KnowledgeSearchTool {
      * Removes duplicate results based on content similarity
      */
     private deduplicateResults(results: any[]): any[] {
-        const unique:any[] = [];
+        const unique: any[] = [];
         const seen = new Set();
 
         for (const result of results) {

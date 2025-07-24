@@ -1,4 +1,5 @@
 
+import dotenv from 'dotenv';
 import { Mastra } from '@mastra/core/mastra';
 import { createLogger } from '@mastra/core/logger';
 import { CloudflareDeployer } from '@mastra/deployer-cloudflare';
@@ -8,7 +9,15 @@ import { codeReviewAgent } from './agents/code-review';
 import { ragAgent } from './agents/ragAgent';
 
 import { LibSQLStore } from '@mastra/libsql';
+import { setGlobalDispatcher, ProxyAgent } from 'undici';
 
+const proxyAgent = new ProxyAgent('http://127.0.0.1:7890');
+setGlobalDispatcher(proxyAgent);
+
+dotenv.config({
+  path: '../../.env',
+  debug: true,
+});
 
 export const mastra = new Mastra({
   agents: { weatherAgent, codeReviewAgent, ragAgent },

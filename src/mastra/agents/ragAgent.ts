@@ -41,8 +41,6 @@ export const ragAgent = new Agent({
     model: openai('gpt-4o-mini'),
     tools: { 
         KnowledgeSearchTool, 
-        DocumentIndexTool, 
-        KnowledgeManagementTool 
     } as any
     // maxSteps: 5 // Allow multiple tool calls for complex queries
 });
