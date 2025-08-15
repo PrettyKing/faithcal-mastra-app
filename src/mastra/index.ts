@@ -9,10 +9,10 @@ import { codeReviewAgent } from './agents/code-review';
 import { ragAgent } from './agents/ragAgent';
 
 import { LibSQLStore } from '@mastra/libsql';
-import { setGlobalDispatcher, ProxyAgent } from 'undici';
+// import { setGlobalDispatcher, ProxyAgent } from 'undici';
 
-const proxyAgent = new ProxyAgent('http://127.0.0.1:7890');
-setGlobalDispatcher(proxyAgent);
+// const proxyAgent = new ProxyAgent('http://127.0.0.1:7890');
+// setGlobalDispatcher(proxyAgent);
 
 dotenv.config({
   path: '../../.env',
