@@ -27,7 +27,7 @@ export const mastra = new Mastra({
   }),
   storage: new LibSQLStore({
     url: 'file:../mastra.db',
-  }),
+  }) as any,
   deployer: new CloudflareDeployer({
     scope: 'c501ded7917a10bae1f96f08a27c8af1',
     projectName: 'faithcal-mastra-app',
@@ -35,5 +35,5 @@ export const mastra = new Mastra({
       apiToken: 'U49CGJ6ZtH5-KuNtjN07zFOmqTdDxtiPoFqCm52o',
       apiEmail: 'chaleeinhongkong@gamil.com',
     },
-  }),
+  })as any,
 });
