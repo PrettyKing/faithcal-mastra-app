@@ -21,7 +21,6 @@
     "@mastra/deployer-cloudflare": "^0.1.23",
     "@mastra/libsql": "^0.0.4-alpha.4",
     "@mastra/memory": "^0.3.4-alpha.4",
-    "@mastra/rag": "^1.0.4",
     "@pinecone-database/pinecone": "^6.1.2",
     "cheerio": "^1.1.2",
     "dotenv": "^17.2.0",
