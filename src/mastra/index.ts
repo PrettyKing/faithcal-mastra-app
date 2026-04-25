@@ -9,6 +9,7 @@ import { codeReviewAgent } from './agents/code-review';
 import { translatorAgent } from './agents/translator';
 import { currencyAgent } from './agents/currency';
 import { summarizerAgent } from './agents/summarizer';
+import { dailyPlannerAgent } from './agents/daily-planner';
 
 import { LibSQLStore } from '@mastra/libsql';
 // import { setGlobalDispatcher, ProxyAgent } from 'undici';
@@ -22,7 +23,7 @@ dotenv.config({
 });
 
 export const mastra = new Mastra({
-  agents: { weatherAgent, codeReviewAgent, translatorAgent, currencyAgent, summarizerAgent },
+  agents: { weatherAgent, codeReviewAgent, translatorAgent, currencyAgent, summarizerAgent, dailyPlannerAgent },
   logger: createLogger({
     name: 'Mastra',
     level: 'info',
