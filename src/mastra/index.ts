@@ -3,7 +3,6 @@ import { Mastra } from "@mastra/core/mastra";
 import { createLogger } from "@mastra/core/logger";
 import { CloudflareDeployer } from "@mastra/deployer-cloudflare";
 import { LibSQLStore } from "@mastra/libsql";
-
 import { weatherAgent } from "./agents/weather";
 import { codeReviewAgent } from "./agents/code-review";
 import { translatorAgent } from "./agents/translator";
@@ -12,6 +11,13 @@ import { summarizerAgent } from "./agents/summarizer";
 import { dailyPlannerAgent } from "./agents/daily-planner";
 
 dotenv.config({ path: "../../.env" });
+
+const storage = process.env.TURSO_DATABASE_URL
+  ? (new LibSQLStore({
+      url: process.env.TURSO_DATABASE_URL,
+      authToken: process.env.TURSO_AUTH_TOKEN,
+    }) as any)
+  : undefined;
 
 export const mastra = new Mastra({
   agents: {
@@ -26,10 +32,7 @@ export const mastra = new Mastra({
     name: "Mastra",
     level: "info",
   }),
-  storage: new LibSQLStore({
-    url: process.env.TURSO_DATABASE_URL || "file:../mastra.db",
-    authToken: process.env.TURSO_AUTH_TOKEN,
-  }) as any,
+  storage,
   deployer: new CloudflareDeployer({
     scope: process.env.CLOUDFLARE_ACCOUNT_ID!,
     projectName: process.env.CLOUDFLARE_PROJECT_NAME || "faithcal-mastra-app",
