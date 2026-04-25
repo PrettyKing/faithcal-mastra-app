@@ -1,7 +1,5 @@
 # FaithCal Mastra App
 
-> by chalee
-
 基于 [Mastra](https://mastra.ai/) 框架构建的多智能体 AI 服务，使用 OpenAI `gpt-4o-mini` 驱动，部署在 Cloudflare Workers 上。
 
 ## 智能体
