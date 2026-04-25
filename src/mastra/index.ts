@@ -6,7 +6,6 @@ import { CloudflareDeployer } from '@mastra/deployer-cloudflare';
 
 import { weatherAgent } from './agents/weather';
 import { codeReviewAgent } from './agents/code-review';
-import { ragAgent } from './agents/ragAgent';
 
 import { LibSQLStore } from '@mastra/libsql';
 // import { setGlobalDispatcher, ProxyAgent } from 'undici';
@@ -20,7 +19,7 @@ dotenv.config({
 });
 
 export const mastra = new Mastra({
-  agents: { weatherAgent, codeReviewAgent, ragAgent },
+  agents: { weatherAgent, codeReviewAgent },
   logger: createLogger({
     name: 'Mastra',
     level: 'info',
