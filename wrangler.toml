@@ -1,5 +1,0 @@
-name = "faithcal-mastra-app"
-main = ".mastra/output/index.mjs"
-compatibility_date = "2025-04-01"
-compatibility_flags = ["nodejs_compat", "nodejs_compat_populate_process_env"]
-account_id = "c501ded7917a10bae1f96f08a27c8af1"
