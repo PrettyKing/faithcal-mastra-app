@@ -11,12 +11,6 @@ import { currencyAgent } from './agents/currency';
 import { summarizerAgent } from './agents/summarizer';
 import { dailyPlannerAgent } from './agents/daily-planner';
 
-import { LibSQLStore } from '@mastra/libsql';
-// import { setGlobalDispatcher, ProxyAgent } from 'undici';
-
-// const proxyAgent = new ProxyAgent('http://127.0.0.1:7890');
-// setGlobalDispatcher(proxyAgent);
-
 dotenv.config({
   path: '../../.env',
   debug: true,
@@ -28,9 +22,6 @@ export const mastra = new Mastra({
     name: 'Mastra',
     level: 'info',
   }),
-  storage: new LibSQLStore({
-    url: 'file:../mastra.db',
-  }) as any,
   deployer: new CloudflareDeployer({
     scope: 'c501ded7917a10bae1f96f08a27c8af1',
     projectName: 'faithcal-mastra-app',
